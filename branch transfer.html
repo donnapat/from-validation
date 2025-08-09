@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คำร้องขอโอนย้ายสาขาวิชาต่างคณะ</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #e8f5e9; /* เขียวพาสเทล */
+      color: #2e7d32;
+    }
+
+    h2 {
+      text-align: center;
+      color: #388e3c; /* เขียวเข้ม */
+    }
+
+    form {
+      background-color: #fff;
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #a5d6a7;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: 0.2s ease-in-out;
+      background-color: #f1f8e9;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #66bb6a;
+      outline: none;
+      box-shadow: 0 0 5px rgba(102, 187, 106, 0.6);
+    }
+
+    .inline {
+      display: inline-block;
+      margin-right: 15px;
+      margin-top: 8px;
+    }
+
+    input[type="radio"] {
+      margin-right: 5px;
+    }
+
+    button {
+      background-color: #66bb6a;
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 25px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #43a047;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      .inline {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      button {
+        font-size: 18px;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h2>คำร้องขอโอนย้ายสาขาวิชาต่างคณะ</h2>
+
+<form id="transferForm">
+  <label>วันที่เขียนคำร้อง
+    <input type="date" id="date" required />
+  </label>
+
+  <label>เรียน (คณะใหม่)
+    <input type="text" id="newFaculty" required />
+  </label>
+
+  <label>คำนำหน้า
+    <span class="inline"><input type="radio" name="prefix" value="นาย" required /> นาย</span>
+    <span class="inline"><input type="radio" name="prefix" value="นาง" /> นาง</span>
+    <span class="inline"><input type="radio" name="prefix" value="นางสาว" /> นางสาว</span>
+  </label>
+
+  <label>ชื่อ-นามสกุล
+    <input type="text" id="fullName" required />
+  </label>
+
+  <label>รหัสนักศึกษา
+    <input type="text" id="studentID" maxlength="10" required />
+  </label>
+
+  <label>โทรศัพท์มือถือ (รูปแบบ 08x-xxx-xxxx)
+    <input type="text" id="phone" placeholder="08x-xxx-xxxx" required />
+  </label>
+
+  <label>หลักสูตร
+    <select id="course" required>
+      <option value="">-- กรุณาเลือก --</option>
+      <option value="4-5 ปี">4 - 5 ปี</option>
+      <option value="4 ปีเทียบเข้าเรียน (2 ปี)">4 ปีเทียบเข้าเรียน (2 ปี)</option>
+    </select>
+  </label>
+
+  <label>ภาคการศึกษา
+    <span class="inline"><input type="radio" name="semester" value="ปกติ" required /> ปกติ</span>
+    <span class="inline"><input type="radio" name="semester" value="สมทบ" /> สมทบ</span>
+  </label>
+
+  <label>สาขาวิชาเดิม
+    <input type="text" id="oldMajor" required />
+  </label>
+
+  <label>คณะเดิม
+    <input type="text" id="oldFaculty" required />
+  </label>
+
+  <label>สาขาวิชาที่ต้องการย้ายเข้า
+    <input type="text" id="newMajor" required />
+  </label>
+
+  <label>เหตุผลที่ขอโอนย้าย
+    <textarea id="reason" rows="4" required></textarea>
+  </label>
+
+  <label>วันที่ยื่นคำร้อง
+    <input type="date" id="submitDate" required />
+  </label>
+
+  <label>ลงชื่อ
+    <input type="text" id="signature" placeholder="นักศึกษา" required />
+  </label>
+
+  <div class="error" id="errorMsg"></div>
+
+  <button type="submit">ส่งคำร้อง</button>
+</form>
+
+<script>
+  document.getElementById('transferForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const phonePattern = /^08\d-\d{3}-\d{4}$/;
+    const phone = document.getElementById('phone').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = '';
+
+    if (!phonePattern.test(phone)) {
+      errorMsg.textContent = 'รูปแบบโทรศัพท์มือถือไม่ถูกต้อง (ต้องเป็น 08x-xxx-xxxx)';
+      return;
+    }
+
+    alert('ส่งคำร้องสำเร็จ!');
+    this.reset();
+  });
+</script>
+
+</body>
+</html>

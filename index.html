@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จองตั๋วกิจกรรม</title>
+  <style>
+    :root {
+      --primary: #6c5ce7;
+      --primary-hover: #5a4bd8;
+      --bg-gradient: linear-gradient(135deg, #1e1e2f, #121212);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --border-glow: rgba(162, 155, 254, 0.4);
+      --highlight: #a29bfe;
+      --error: #ff7675;
+      --text: #f0f0f0;
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --input-border: #444;
+      --nav-bg: rgba(108, 92, 231, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      background: var(--nav-bg);
+      padding: 12px 24px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+      user-select: none;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    nav a {
+      color: var(--highlight);
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: inset 0 0 0 2px var(--highlight);
+    }
+
+    nav a:hover,
+    nav a:focus {
+      background-color: var(--highlight);
+      color: #121212;
+      box-shadow: 0 4px 10px var(--highlight);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    nav a:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    form {
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 32px 0 var(--border-glow);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      max-width: 420px;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--highlight);
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1.5px solid var(--input-border);
+      background-color: var(--input-bg);
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    input::placeholder {
+      color: rgba(240, 240, 240, 0.6);
+      font-style: italic;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--highlight);
+      box-shadow: 0 0 8px var(--highlight);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20,40 70,90 120,40' fill='none' stroke='%23ffffff' stroke-width='20' stroke-linecap='round' stroke-linejoin='round' /%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    select option {
+      background-color: #1f1f1f;
+      color: #fff;
+    }
+
+    select option:checked {
+      background-color: #6c5ce7;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background: linear-gradient(45deg, var(--primary), var(--highlight));
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      letter-spacing: 0.03em;
+      box-shadow: 0 6px 15px rgba(108, 92, 231, 0.6);
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, var(--primary-hover), var(--highlight));
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(162, 155, 254, 0.9);
+    }
+
+    button:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.8);
+    }
+
+    .error {
+      margin-top: 15px;
+      color: var(--error);
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    .modal {
+      display: none;
+      background: rgba(0, 0, 0, 0.75);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--glass-bg);
+      padding: 30px 35px;
+      border-radius: 18px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      font-weight: 600;
+      max-width: 350px;
+      width: 90%;
+      text-align: center;
+      animation: fadeInPop 0.4s ease;
+      letter-spacing: 0.02em;
+      font-size: 1.1rem;
+    }
+
+    .modal-content button {
+      background: var(--highlight);
+      border: none;
+      margin-top: 20px;
+      padding: 10px 25px;
+      border-radius: 8px;
+      color: #121212;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .modal-content button:hover {
+      background: #a29bfe;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      form {
+        padding: 30px 20px;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px 20px;
+        border-radius: 15px;
+      }
+
+      nav a {
+        padding: 12px 0;
+        text-align: center;
+        box-shadow: inset 0 0 0 2px var(--highlight);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="health survey.html" aria-label="ไปยังแบบสำรวจสุขภาพ">แบบสำรวจสุขภาพ</a>
+    <a href="branch transfer.html" aria-label="ไปยังหน้าโอนสาขา">โอนสาขา</a>
+  </nav>
+
+  <form id="bookingForm" novalidate>
+    <h2>ฟอร์มจองเข้าร่วมกิจกรรม</h2>
+
+    <label for="fullName">ชื่อ-นามสกุล:</label>
+    <input type="text" id="fullName" name="fullName" placeholder="เช่น นางสาวดลนภัส ภีระคำ" required />
+
+    <label for="phone">เบอร์โทรศัพท์ (10 หลัก):</label>
+    <input type="tel" id="phone" name="phone" placeholder="เช่น 0981234567" required />
+
+    <label for="ticketType">ประเภทตั๋ว:</label>
+    <select id="ticketType" name="ticketType" required>
+      <option value="" disabled selected>-- กรุณาเลือก --</option>
+      <option value="ปกติ">ปกติ</option>
+      <option value="VIP">VIP</option>
+      <option value="Premium">Premium</option>
+    </select>
+
+    <label for="ticketCount">จำนวนตั๋ว (สูงสุด 5 ใบ):</label>
+    <input type="number" id="ticketCount" name="ticketCount" placeholder="1-5" min="1" max="5" required />
+
+    <div class="error" id="errorMsg"></div>
+    <button type="submit">🎟️ จองตั๋ว</button>
+  </form>
+
+  <!-- Modal -->
+  <div class="modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successText">
+    <div class="modal-content">
+      <p id="successText"></p>
+      <button onclick="document.getElementById('successModal').style.display='none'" aria-label="ปิดข้อความสำเร็จ">ปิด</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('bookingForm');
+    const errorMsg = document.getElementById('errorMsg');
+    const successModal = document.getElementById('successModal');
+    const successText = document.getElementById('successText');
+
+    function validateFullName(name) {
+      return name.trim().split(' ').length >= 2;
+    }
+
+    function validatePhone(phone) {
+      return /^0\d{9}$/.test(phone);
+    }
+
+    function validateTicketCount(type, count) {
+      if (isNaN(count) || count < 1 || count > 5) return false;
+      if ((type === 'VIP' || type === 'Premium') && count > 2) return false;
+      return true;
+    }
+
+    function showError(message) {
+      errorMsg.textContent = message;
+    }
+
+    function showSuccess(type, count) {
+      successText.textContent = `✅ จองตั๋วสำเร็จ จำนวน: ${count} ใบ | ประเภท: ${type}`;
+      successModal.style.display = 'flex';
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      errorMsg.textContent = '';
+
+      const fullName = form.fullName.value.trim();
+      const phone = form.phone.value.trim();
+      const ticketType = form.ticketType.value;
+      const ticketCount = parseInt(form.ticketCount.value, 10);
+
+      if (!validateFullName(fullName)) {
+        return showError('กรุณากรอกชื่อ-นามสกุลอย่างน้อย 2 คำ');
+      }
+
+      if (!validatePhone(phone)) {
+        return showError('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก เริ่มต้นด้วยเลข 0)');
+      }
+
+      if (!ticketType) {
+        return showError('กรุณาเลือกประเภทตั๋ว');
+      }
+
+      if (!validateTicketCount(ticketType, ticketCount)) {
+        return showError(ticketType === 'VIP' || ticketType === 'Premium'
+          ? 'ประเภท VIP และ Premium จำกัดจำนวนไม่เกิน 2 ใบ'
+          : 'จำนวนตั๋วต้องอยู่ระหว่าง 1 ถึง 5 ใบ');
+      }
+
+      showSuccess(ticketType, ticketCount);
+      form.reset();
+    });
+
+    successModal.addEventListener('click', (e) => {
+      if (e.target === successModal) {
+        successModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

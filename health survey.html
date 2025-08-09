@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แบบสอบถามสุขภาพ</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e0f2f1; /* สีพื้นเขียวอมฟ้า */
+      margin: 0;
+      padding: 20px;
+      color: #2e7d32;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 25px;
+      background-color: #a7dedb;
+      padding: 10px 25px;
+      border-radius: 25px;
+      box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);
+      user-select: none;
+    }
+
+    nav a {
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #004d40;
+      padding: 8px 18px;
+      border-radius: 18px;
+      box-shadow: inset 0 0 0 2px #004d40;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      background-color: #004d40;
+      color: #a7dedb;
+      box-shadow: 0 4px 15px #004d40;
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    nav a:active {
+      transform: translateY(0);
+      box-shadow: inset 0 0 0 2px #004d40;
+    }
+
+    h2 {
+      text-align: center;
+      color: #00796b;
+    }
+
+    form {
+      background: #ffffff;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 25px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 150, 136, 0.2);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #004d40;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #b2dfdb;
+      border-radius: 8px;
+      box-sizing: border-box;
+      background-color: #f1f8f7;
+      transition: border 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #26a69a;
+      outline: none;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 6px;
+      transform: scale(1.2);
+    }
+
+    button {
+      background-color: #26a69a;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #00897b;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 350px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      white-space: pre-line; /* เพื่อให้ขึ้นบรรทัดใหม่ใน modal */
+    }
+
+    .modal-content button {
+      background-color: #43a047;
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content button:hover {
+      background-color: #2e7d32;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        padding: 20px;
+      }
+
+      .modal-content {
+        margin: 10px;
+        width: 90%;
+      }
+
+      button {
+        font-size: 18px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="branch transfer.html" aria-label="ไปยังหน้าโอนสาขา">โอนสาขา</a>
+    <a href="index.html" aria-label="ไปยังฟอร์มจองตั๋ว">จองตั๋ว</a>
+  </nav>
+
+  <h2>แบบสอบถามสุขภาพ</h2>
+
+  <form id="healthForm">
+    <label>อายุ: 
+      <input type="number" id="age" min="1" />
+    </label>
+
+    <label>เพศ: 
+      <input type="radio" name="gender" value="ชาย" /> ชาย
+      <input type="radio" name="gender" value="หญิง" /> หญิง
+    </label>
+
+    <label>น้ำหนัก (กก.): 
+      <input type="number" id="weight" step="0.1" />
+    </label>
+
+    <label>ส่วนสูง (ซม.): 
+      <input type="number" id="height" step="0.1" />
+    </label>
+
+    <label>
+      <input type="checkbox" id="hasDisease" /> มีโรคประจำตัว
+    </label>
+
+    <div id="diseaseDetailsContainer" style="display:none;">
+      <label>กรุณาระบุโรคประจำตัว:
+        <textarea id="diseaseDetails" rows="3"></textarea>
+      </label>
+    </div>
+
+    <button type="submit">ส่งแบบสอบถาม</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+
+  <!-- Modal -->
+  <div class="modal" id="resultModal">
+    <div class="modal-content">
+      <p id="resultText"></p>
+      <button onclick="document.getElementById('resultModal').style.display='none'">ปิด</button>
+    </div>
+  </div>
+
+  <script>
+    // แสดง textarea เมื่อเลือก checkbox
+    document.getElementById('hasDisease').addEventListener('change', function() {
+      document.getElementById('diseaseDetailsContainer').style.display = this.checked ? 'block' : 'none';
+    });
+
+    document.getElementById('healthForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const age = parseInt(document.getElementById('age').value);
+      const genderEls = document.getElementsByName('gender');
+      let gender = null;
+      for (const g of genderEls) {
+        if (g.checked) gender = g.value;
+      }
+      const weight = parseFloat(document.getElementById('weight').value);
+      const heightCm = parseFloat(document.getElementById('height').value);
+      const hasDisease = document.getElementById('hasDisease').checked;
+      const diseaseDetails = document.getElementById('diseaseDetails').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      errorMsg.textContent = '';
+
+      // Validation
+      if (isNaN(age) || age < 15 || age > 60) {
+        errorMsg.textContent = 'กรุณากรอกอายุระหว่าง 15 ถึง 60 ปี';
+        return;
+      }
+
+      if (!gender) {
+        errorMsg.textContent = 'กรุณาเลือกเพศ';
+        return;
+      }
+
+      if (isNaN(weight) || weight <= 0) {
+        errorMsg.textContent = 'กรุณากรอกน้ำหนักที่ถูกต้อง';
+        return;
+      }
+
+      if (isNaN(heightCm) || heightCm <= 0) {
+        errorMsg.textContent = 'กรุณากรอกส่วนสูงที่ถูกต้อง';
+        return;
+      }
+
+      if (hasDisease && diseaseDetails === '') {
+        errorMsg.textContent = 'กรุณากรอกโรคประจำตัว';
+        return;
+      }
+
+      // คำนวณ BMI
+      const heightM = heightCm / 100;
+      const bmi = weight / (heightM * heightM);
+      let bmiResult = '';
+
+      if (bmi < 18.5) bmiResult = 'น้ำหนักน้อย';
+      else if (bmi < 25) bmiResult = 'ปกติ';
+      else if (bmi < 30) bmiResult = 'น้ำหนักเกิน';
+      else bmiResult = 'อ้วน';
+
+      // แสดง Modal ผลลัพธ์
+      let resultText = `เพศ: ${gender}\nอายุ: ${age} ปี\nBMI: ${bmi.toFixed(2)} (${bmiResult})`;
+      if (hasDisease) {
+        resultText += `\nโรคประจำตัว: ${diseaseDetails}`;
+      }
+
+      document.getElementById('resultText').textContent = resultText;
+      document.getElementById('resultModal').style.display = 'flex';
+    });
+  </script>
+
+</body>
+</html>
